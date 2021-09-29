@@ -1,7 +1,7 @@
 <?php
     require_once("../../../../config_vp_s2021.php");
     require_once("fnc_general.php");
-    require_once("fnc_user.php");
+    //require_once("fnc_user.php");
 
     $notice = null;
     $firstname = null;
@@ -29,7 +29,16 @@
     //kontrollime sisestust
     if($_SERVER["REQUEST_METHOD"] === "POST"){
         if(isset($_POST["user_data_submit"])){
-			
+			//kontrollin sisestusi
+            //eesnimi
+            if(isset($_POST["first_name_input"]) and !empty($_POST["first_name_input"])){
+                $firstname = test_input(filter_var($_POST["first_name_input"], FILTER_SANITIZE_STRING));
+                if(empty($firstname)){
+                    $firstname_error = "Palun sisesta oma eesnimi!";
+                }
+            } else {
+                $firstname_error = "Palun sisesta oma eesnimi!";
+            }
 			
         }//if isset lõppeb
     }//if request_method lõppeb
