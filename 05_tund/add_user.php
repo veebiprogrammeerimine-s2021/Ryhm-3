@@ -1,7 +1,7 @@
 <?php
     require_once("../../../../config_vp_s2021.php");
     require_once("fnc_general.php");
-    //require_once("fnc_user.php");
+    require_once("fnc_user.php");
 
     $notice = null;
     $firstname = null;
@@ -122,6 +122,11 @@
                 }
             } else {
                 $confirm_password_error = "Palun sisesta salasõna kaks korda!";
+            }
+            
+            //kui kõik kombes, salvestame uue kasutaja
+            if(empty($firstname_error) and empty($surname_error) and empty($birth_month_error) and empty($birth_year_error) and empty($birth_day_error) and empty($birth_date_error) and empty($gender_error) and empty($email_error) and empty($password_error) and empty($confirm_password_error)){
+                $notice = sign_up($firstname, $surname, $email, $gender, $birth_date, $_POST["password_input"]);
             }
 			
         }//if isset lõppeb
