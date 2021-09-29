@@ -88,6 +88,15 @@
             } else {
                 $birth_year_error = "Palun vali sünni aasta!";
             }
+            //kuupäeva valideerimine ja kokku panemine
+            if(empty($birth_day_error) and empty($birth_month_error) and empty($birth_year_error)){
+                if(checkdate($birth_month, $birth_day, $birth_year)){
+                    $temp_date = new DateTime($birth_year ."-" .$birth_month ."-" .$birth_day);
+                    $birth_date = $temp_date->format("Y-m-d");
+                } else {
+                    $birth_date_error = "Valitud kuupäev on ebareaalne!";
+                }
+            }
             
             //email
             if(isset($_POST["email_input"]) and !empty($_POST["email_input"])){
@@ -104,7 +113,7 @@
                     $password_error = "Sisestatud salasõna on liiga lühike!";
                 }
             } else {
-                $password_error = "Sisestatud salasõna on liiga lühike!";
+                $password_error = "Palun sisesta salasõna!";
             }
             //parooli kordus
             if(isset($_POST["confirm_password_input"]) and !empty($_POST["confirm_password_input"])){
@@ -112,7 +121,7 @@
                     $confirm_password_error = "Sisestatud salasõnad on erinevad!";
                 }
             } else {
-                $confirm_password_error = "Sisestatud salasõnad on erinevad!";
+                $confirm_password_error = "Palun sisesta salasõna kaks korda!";
             }
 			
         }//if isset lõppeb
