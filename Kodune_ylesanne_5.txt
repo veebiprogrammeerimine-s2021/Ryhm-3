@@ -1,0 +1,46 @@
+1) lisage sisestuse kontroll ka sisselogimise vormile. E-posti aadressi peab valideerima. Seda tuleks ka meeles pidada juhuks, kui sisselogimine ei õnnestu, et ei peaks vale parooli puhul uuesti sisestama.
+Mõistlik on kontrollida, kas kasutajatunnus sisestati ja kas sisestati ka vähemalt 8 märgi pikkune parool. Vähemaga pole ju üldse mõtet sisse logimist üritada.
+
+2) Täiendage uue kasutaja lisamise funktsiooni kontrolliga, kas sisestatud e-maili aadressiga juba kedagi pole.
+Selleks tehke enne uue kasutaja lisamist esimese andmebaasipäringuna ($stmt) lihtne päring näiteks andmebaasist just sellise e-mailiga kasutaja id lugemiseks (SELECT id FROM vprg_users WHERE email = ?).
+Kui pärin annab tõese tulemuse ehk if($stmt->fetch()), siis on kasutaja juba olemas ja tuleb edastada vastav teada. Kui aga vastet pole, siis see päring sulgeda ja teha uus, kasutaja salvestamise päring.
+
+3) Meie praegune sisselogimine on tegelikult mõttetu. Sellele samale lehele home.php saab igaüks ...
+Et sisselogimine oleks tõelisem, tuleb kasutusele võtta sessioon - keskkond, mis säilitab erinevaid kasutaja tegevusega seotud muutujaid jms. Põhimõtteliselt määrame me mõned sessioonimuutujad ja siis kontrollime, kas need on määratud. Kui on - siis on kasutaja sisselogitud.
+Sessioonimuutujaid hoitakse massiivis $_SESSION. See on olemas, kui sessiooni pole ja sessioonimuutujaid määratud pole, siis on ta tühi.
+Sessiooni algatamiseks ja kasutamiseks peab kõikidel lehtedel, kus sessiooni vaja võib minna, kasutama käsku:
+session_start();
+
+Praegu tuleks see lisada failide page.php ja home.php algusesse (päris algusesse). Ühel te logite sisse ja teisel juba olete sisseloginud, sessiooni on vaja mõlemal.
+
+Kui sessioon on algatatud, siis saate sessioonimuutujaid määrata ja nende väärtuseid küsida/kasutada.
+Nüüd oleks vaja sisselogimise funktsioonis lisaks passwordile andmebaasist  lugeda ka kasutaja id.
+Sisselogimise funktsioonis, kui parool on õigeks osutunud, tuleks enne home.php lehele liikumist määrata endale vajalikud sessioonimuutujad. Näiteks võiks meeles pidada andmebaasist saadud kasutaja id. Minu näites on kasutatud sessioonimuutujat (tegelikult siis massiivi $_SESSION üht elementi) user_id. Selle määramine näeb välja selline:
+$_SESSION["user_id"] = $id_from_db;
+
+Nüüd saate kõikide nende lehtede algusesse, kus peab olema vaid sisselogituna (lisaks session_start() käsule) lisama kontrolli, kas see sessioonimuutuja on olemas. Näiteks kontrollitakse, kas on puudu ja kui ongi, siis liigutakse kohe sisselogimise lehele:
+if(!isset($_SESSION["user_id"])){
+	header("Location: page.php");
+}
+
+Nüüd pole enam seda lehte võimalik ilma sisselogimata vaadata.
+
+Vaja on ka võimalust välja logimiseks. Selleks on kõige lihtsam lehele lisada link (kusagile sobivale kohale HTML osas):
+<p><a href="?logout=1">Logi välja</a></p>
+
+Siin kasutatakse GET meetodit ja lisatakse lehe uuesti laadimisel aadressile parameeter logout. Parameetri väärtus pole tegelikult üldse oluline.
+
+Lehe algusesse tuleb nüüd lisada ka kontroll, ega pole seda linki klikitud:
+if(isset($_GET["logout"])){
+	session_destroy();
+	header("Location: page.php");
+}
+
+Kui GET meetodiga saadakse logout, siis sessioon hävitatakse (kõik muutujad jms unustatakse) ja liigutakse sisselogimise lehele.
+
+Proovige!
+
+Lisage sisselogimise kontroll ja väljalogimise võimalus ka filmide nimekirja ja filmide lisamise lehtedele.
+
+4) Proovige sisselogimisel andmebaasist lugeda lisaks id-le ja passwordile ka eesnimi ja perekonnanimi. Neid võiks siis lehtedel, kus olete sisse loginud, senise $author_name asemel kasutada.
+
