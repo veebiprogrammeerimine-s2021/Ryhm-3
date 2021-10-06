@@ -48,6 +48,15 @@
 				$_SESSION["user_id"] = $id_from_db;
                 $_SESSION["first_name"] = $firstname_from_db;
                 $_SESSION["last_name"] = $lastname_from_db;
+                //=================================================
+                //edaspidi loeme kasutajaprofiili (kui see on olemas) andmebaasist
+                //ja kasutame kasutaja enda valitud värve
+                
+                $_SESSION["bg_color"] = "#FFFFBB";
+                $_SESSION["text_color"] = "#FFCC00";
+                //valge   #FFFFFF
+                //must    #000000
+                //=================================================
                 $stmt->close();
                 $conn->close();
                 header("Location: home.php");
