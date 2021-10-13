@@ -54,7 +54,56 @@
         
         if(empty($person_movie_relation_notice)){
             $person_movie_relation_notice = store_person_movie_relation($person_selected, $movie_selected, $position_selected, $role);
-            echo $person_selected .$movie_selected .$position_selected .$role ."ahaa";
+            //echo $person_selected .$movie_selected .$position_selected .$role ."ahaa";
+        }
+    }
+    
+    $person_selected_for_photo = null;
+    $photo_upload_notice = null;
+    $person_photo_dir = "../person_photo/";
+    $file_type = null;
+    $file_name = null;
+    
+    if(isset($_POST["person_photo_submit"])){
+        //var_dump($_POST);
+        //var_dump($_FILES);
+        if(isset($_POST["person_select"]) and !empty($_POST["person_select"])){
+            $person_selected_for_photo = filter_var($_POST["person_select"], FILTER_VALIDATE_INT);
+        }
+        if(empty($person_selected_for_photo)){
+            $photo_upload_notice .= "Isik on valimata! ";
+        }
+        
+        if(isset($_FILES["photo_input"]["tmp_name"]) and !empty($_FILES["photo_input"]["tmp_name"])){
+            $image_check = getimagesize($_FILES["photo_input"]["tmp_name"]);
+            if($image_check !== false){
+                if($image_check["mime"] == "image/jpeg"){
+                    $file_type = "jpg";
+                }
+                if($image_check["mime"] == "image/png"){
+                    $file_type = "png";
+                }
+                if($image_check["mime"] == "image/gif"){
+                    $file_type = "gif";
+                }
+                
+                //teeme failinime
+                //genereerin ajatempli
+                $time_stamp = microtime(1) * 10000;
+                $file_name = "person_" .$_POST["person_select"] ."_" .$time_stamp ."." .$file_type; 
+                
+                //move_uploaded_file($_FILES["photo_input"]["tmp_name"], $person_photo_dir .$_FILES["photo_input"]["name"]);
+                
+            } else {
+                $photo_upload_notice .= "Pilt on valimata!";
+            }
+        }
+        
+        if(empty($photo_upload_notice)){
+            if(move_uploaded_file($_FILES["photo_input"]["tmp_name"], $person_photo_dir .$file_name)){
+                //pildi info andmebaasi
+                $photo_upload_notice = store_person_photo($file_name, $person_selected_for_photo);
+            }
         }
     }
     
@@ -67,7 +116,6 @@
     <ul>
         <li><a href="?logout=1">Logi välja</a></li>
 		<li><a href="home.php">Avaleht</a></li>
-		<li><a href="list_films.php">Filmide nimekirja vaatamine</a> versioon 1</li>
     </ul>
 	<hr>
     <h2>Filmi info seoste loomine</h2>
@@ -97,6 +145,18 @@
         <input type="submit" name="person_movie_relation_submit" value="Salvesta">
     </form>
     <span><?php echo $person_movie_relation_notice; ?></span>
+    <hr>
+    <h3>Filmitegelase foto lisamine</h3>
+    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
+        <label for="person_select_for_photo">Isik: </label>
+        <select name="person_select" id="person_select_for_photo">
+            <option value="" selected disabled>Isik</option>
+            <?php echo read_all_person_for_select($person_selected_for_photo); ?>
+        </select>
+        <input type="file" name="photo_input">
+        <input type="submit" name="person_photo_submit" value="Lae pilt üles">
+    </form>
+    <span><?php echo $photo_upload_notice; ?></span>
     
 </body>
 </html>
