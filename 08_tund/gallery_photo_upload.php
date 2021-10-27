@@ -12,7 +12,7 @@
     }
 	
     require_once("../../../../config_vp_s2021.php");
-    //require_once("fnc_photoupload.php");
+    require_once("fnc_photoupload.php");
 	require_once("fnc_general.php");
     
     $photo_upload_notice = null;
@@ -21,10 +21,14 @@
     $photo_upload_thumb_dir = "../upload_photos_thumb/";
     $photo_file_name_prefix = "vp_";
     $photo_file_size_limit = 1.2 * 1024 * 1024;
+    $photo_width_limit = 600;
+    $photo_height_limit = 400;
+    $image_size_ratio = 1;
     $file_type = null;
     $file_name = null;
     $alt_text = null;
     $privacy = 1;
+    $watermark_file = "../pics/vp_logo_color_w100_overlay.png";
     
     if(isset($_POST["photo_submit"])){
         //var_dump($_POST);
@@ -64,7 +68,45 @@
             $file_name = $photo_file_name_prefix .$time_stamp ."." .$file_type; 
             
             //muudame pildi suurust
+            //loome image objekti ehk pikslikogumi
+            if($file_type == "jpg"){
+                $my_temp_image = imagecreatefromjpeg($_FILES["photo_input"]["tmp_name"]);
+            }
+            if($file_type == "png"){
+                $my_temp_image = imagecreatefrompng($_FILES["photo_input"]["tmp_name"]);
+            }
+            if($file_type == "gif"){
+                $my_temp_image = imagecreatefromgif($_FILES["photo_input"]["tmp_name"]);
+            }
+            //pildi originaalmõõdud
+            $image_width = imagesx($my_temp_image);
+            $image_height = imagesy($my_temp_image);
+            if($image_width / $photo_width_limit > $image_height / $photo_height_limit){
+                $image_size_ratio = $image_width / $photo_width_limit;
+            } else {
+                $image_size_ratio = $image_height / $photo_height_limit;
+            }
+            $image_new_width = round($image_width / $image_size_ratio);
+            $image_new_height = round($image_height / $image_size_ratio);
+            //loome uue, väiksema pildiobjekti
+            $my_new_temp_image = imagecreatetruecolor($image_new_width, $image_new_height);
+            imagecopyresampled($my_new_temp_image, $my_temp_image, 0, 0, 0, 0, $image_new_width, $image_new_height, $image_width, $image_height);
             
+            //lisan vesimärgi
+            $watermark = imagecreatefrompng($watermark_file);
+            $watermark_width = imagesx($watermark);
+            $watermark_height = imagesy($watermark);
+            $watermark_x = $image_new_width - $watermark_width - 10;
+            $watermark_y = $image_new_height - $watermark_height - 10;
+            imagecopy($my_new_temp_image, $watermark, $watermark_x, $watermark_y, 0, 0, $watermark_width, $watermark_height);
+            imagedestroy($watermark);
+                        
+            //salvestamine
+            $photo_upload_notice = save_image($my_new_temp_image, $file_type, $photo_upload_normal_dir .$file_name);
+            //kõrvaldame piklsikogumi, et mälu vabastada
+            imagedestroy($my_new_temp_image);
+            
+            imagedestroy($my_temp_image);
             
             
             if(move_uploaded_file($_FILES["photo_input"]["tmp_name"], $photo_upload_orig_dir .$file_name)){
