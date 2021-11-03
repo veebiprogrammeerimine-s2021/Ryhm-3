@@ -79,7 +79,7 @@
                 $time_stamp = microtime(1) * 10000;
                 
                 //moodustan failinime, kasutame eesliidet
-                $file_name = $photo_filename_prefix ."_" .$time_stamp ."." .$file_type;
+                $file_name = $photo_filename_prefix .$time_stamp ."." .$file_type;
                 
                 //teen graafikaobjekti, image objekti
                 if($file_type == "jpg"){

@@ -37,6 +37,11 @@
 			
 		//loome uue ajutise pildiobjekti
 		$my_new_image = imagecreatetruecolor($new_w, $new_h);
+        //säilitame vajadusel läbipaistvuse (png ja gif piltide jaoks
+        imagesavealpha($my_new_image, true);
+        $trans_color = imagecolorallocatealpha($my_new_image, 0, 0, 0, 127);
+        imagefill($my_new_image, 0, 0, $trans_color);
+        
 		imagecopyresampled($my_new_image, $src, 0, 0, $cut_x, $cut_y, $new_w, $new_h, $cut_size_w, $cut_size_h);
 		return $my_new_image;
 	}
@@ -49,6 +54,7 @@
 		$watermark_y = imagesy($image) - $watermark_height - 10;
 		imagecopy($image, $watermark, $watermark_x, $watermark_y, 0, 0, $watermark_width, $watermark_height);
 		imagedestroy($watermark);
+        return $image;
 	}
 		
     function save_image($image, $file_type, $target){
