@@ -85,12 +85,8 @@
                 $photo_upload->resize_photo($thumbnail_width, $thumbnail_height);
                 $photo_upload_notice = "Pisipildi " .$photo_upload->save_image($photo_thumbnail_upload_dir .$file_name);
 
-                if(move_uploaded_file($_FILES["photo_input"]["tmp_name"], $photo_orig_upload_dir .$file_name)){
-                    $photo_upload_notice .= " Originaalfoto laeti üles!";
-                } else {
-                    $photo_upload_notice .= " Foto üleslaadimine ei õnnestunud!";
-                }
-				
+                $photo_upload_notice .= $photo_upload->move_orig_photo($photo_orig_upload_dir .$file_name);
+                				
 				$photo_upload_notice .= " " .store_photo_data($file_name, $alt_text, $privacy);
 				$alt_text = null;
 				$privacy = 1;
