@@ -60,9 +60,6 @@
             //kas alt tekst on
             if(isset($_POST["alt_input"]) and !empty($_POST["alt_input"])){
                 $alt_text = test_input(filter_var($_POST["alt_input"], FILTER_SANITIZE_STRING));
-/*                 if(empty($alt_text)){
-                    $photo_error .= "Alternatiivtekst on lisamata!";
-                } */
             }
 			
 			//kas on privaatsus
@@ -74,8 +71,7 @@
 			}
             
             $photo_upload = new Photoupload($_FILES["photo_input"], $file_type);
-			
-            
+			            
             if(empty($photo_error)){
                 //teen ajatempli
                 $time_stamp = microtime(1) * 10000;
@@ -83,32 +79,14 @@
                 //moodustan failinime, kasutame eesliidet
                 $file_name = $photo_filename_prefix .$time_stamp ."." .$file_type;
                 
-                //suuruse muutmine
-                //$my_new_temp_image = resize_photo($my_temp_image, $normal_photo_max_width, $normal_photo_max_height);
                 $photo_upload->resize_photo($normal_photo_max_width, $normal_photo_max_height);
-                                
-                //lisan vesimärgi
-				//$my_new_temp_image = add_watermark($my_new_temp_image, $watermark_file);
                 $photo_upload->add_watermark($watermark_file);
-                
-                //salvestan
-                //$photo_upload_notice = "Vähendatud pildi " .save_image($my_new_temp_image, $file_type, $photo_normal_upload_dir .$file_name);
                 $photo_upload_notice = "Vähendatud pildi " .$photo_upload->save_image($photo_normal_upload_dir .$file_name);
-                //imagedestroy($my_new_temp_image);
-				
-				//teen pisipildi
-				//$my_new_temp_image = resize_photo($my_temp_image, $thumbnail_width, $thumbnail_height, false);
                 $photo_upload->resize_photo($thumbnail_width, $thumbnail_height);
-                //$photo_upload_notice .= " Pisipildi " .save_image($my_new_temp_image, $file_type, $photo_thumbnail_upload_dir .$file_name);
                 $photo_upload_notice = "Pisipildi " .$photo_upload->save_image($photo_thumbnail_upload_dir .$file_name);
-                //imagedestroy($my_new_temp_image);
-                
-                //imagedestroy($my_temp_image);
-                
-                //kopeerime pildi originaalkujul, originaalnimega vajalikku kataloogi
+
                 if(move_uploaded_file($_FILES["photo_input"]["tmp_name"], $photo_orig_upload_dir .$file_name)){
                     $photo_upload_notice .= " Originaalfoto laeti üles!";
-                    //$photo_upload_notice = store_person_photo($file_name, $_POST["person_for_photo_input"]);
                 } else {
                     $photo_upload_notice .= " Foto üleslaadimine ei õnnestunud!";
                 }
