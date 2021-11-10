@@ -14,6 +14,7 @@
     require_once("../../../../config_vp_s2021.php");
 	require_once("fnc_photoupload.php");
     require_once("fnc_general.php");
+    require_once("classes/Photoupload.class.php");
     
     $photo_error = null;
     $photo_upload_notice = null;
@@ -34,6 +35,7 @@
     if(isset($_POST["photo_submit"])){
         if(isset($_FILES["photo_input"]["tmp_name"]) and !empty($_FILES["photo_input"]["tmp_name"])){
             //kas on pilt ja mis tüüpi?
+            var_dump($_FILES["photo_input"]);
             $image_check = getimagesize($_FILES["photo_input"]["tmp_name"]);
             if($image_check !== false){
                 if($image_check["mime"] == "image/jpeg"){
@@ -70,6 +72,8 @@
 			if(empty($privacy)){
 				$photo_error . " Privaatsus on määramata!";
 			}
+            
+            $photo_upload = new Photoupload($_FILES["photo_input"], $file_type);
 			
             
             if(empty($photo_error)){
@@ -120,6 +124,9 @@
 				$alt_text = null;
 				$privacy = 1;
             }
+        
+        
+        
         } else {
             $photo_error = "Pildifaili pole valitud!";
         }

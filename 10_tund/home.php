@@ -11,6 +11,13 @@
         header("Location: page.php");
     }
     
+    //testin klassi
+    /* require_once("classes/Test.class.php");
+    $test_object = new Test(6);
+    echo " Teadaolev, avalik number: " .$test_object->known_number;
+    $test_object->reveal();
+    unset($test_object); */
+    
     require("page_header.php");
 ?>
 	<h1><?php echo $_SESSION["first_name"] ." " .$_SESSION["last_name"]; ?>, veebiprogrammeerimine</h1>
