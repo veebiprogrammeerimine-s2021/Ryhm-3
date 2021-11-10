@@ -18,7 +18,7 @@
     
     //greeny.cs.tlu.ee/~rinde/vp2021/Ryhm-3/09_tund/gallery_public.php?page=2
     $page = 1;
-    $limit = 5;
+    $limit = 10;
     $photo_count = count_public_photos($privacy);
     //kontrollime, mis lehel oleme ja kas selline leht on võimalik
     if(!isset($_GET["page"]) or $_GET["page"] < 1){
