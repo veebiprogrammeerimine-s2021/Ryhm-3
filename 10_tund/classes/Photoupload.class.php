@@ -11,6 +11,15 @@
             $this->my_temp_image = $this->create_image_from_file($this->photo_to_upload["tmp_name"], $this->file_type);
         }
         
+        function __destruct(){
+            if(isset($this->my_temp_image)){
+                @imagedestroy($this->my_temp_image);
+            }
+            if(isset($this->my_new_temp_image)){
+                @imagedestroy($this->my_new_temp_image);
+            }
+        }
+        
         private function create_image_from_file($photo, $file_type){
             //teen graafikaobjekti, image objekti
             if($file_type == "jpg"){
