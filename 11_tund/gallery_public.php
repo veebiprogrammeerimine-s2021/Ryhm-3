@@ -40,7 +40,16 @@
         <div class="modalhorizontal">
             <div class="modalvertical">
                 <p id="modalcaption"></p>
-                <img src="../pics/empty.png" alt="Galeriipilt">
+                <img id="modalimage" src="../pics/empty.png" alt="Galeriipilt">
+                <br>
+                <input id="rate1" name="rating" type="radio" value="1"><label for="rate1">1</label>
+                <input id="rate2" name="rating" type="radio" value="2"><label for="rate2">2</label>
+                <input id="rate3" name="rating" type="radio" value="3"><label for="rate3">3</label>
+                <input id="rate4" name="rating" type="radio" value="4"><label for="rate4">4</label>
+                <input id="rate5" name="rating" type="radio" value="5"><label for="rate5">5</label>
+                <button id="storeRating" type="button">Salvesta hinne</button>
+                <br>
+                <p id="avgRating"></p>
             </div>
         </div>
     </div>
@@ -55,7 +64,7 @@
     </ul>
 	<hr>
     <h2>Avalike fotode galerii</h2>
-    <div class="gallery">
+    <div id="gallery" class="gallery">
         <p>
             <?php
                 //Eelmine leht | Järgmine leht
