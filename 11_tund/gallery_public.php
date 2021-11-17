@@ -30,9 +30,21 @@
     }
     
     $to_head = '<link rel="stylesheet" type="text/css" href="style/gallery.css">' . "\n";
+    $to_head .= '<link rel="stylesheet" type="text/css" href="style/modal.css">' . "\n";
+    $to_head .= '<script src="javascript/modal.js" defer></script>' ."\n";
     require("page_header.php");
 ?>
-
+    <!--Modaalaken galeriipiltide jaoks-->
+    <div id="modalarea" class="modalarea">
+        <span id="modalclose" class="modalclose">&times;</span>
+        <div class="modalhorizontal">
+            <div class="modalvertical">
+                <p id="modalcaption"></p>
+                <img src="../pics/empty.png" alt="Galeriipilt">
+            </div>
+        </div>
+    </div>
+    
 	<h1><?php echo $_SESSION["first_name"] ." " .$_SESSION["last_name"]; ?>, veebiprogrammeerimine</h1>
 	<p>See leht on valminud õppetöö raames ja ei sisalda mingisugust tõsiseltvõetavat sisu!</p>
 	<p>Õppetöö toimus <a href="https://www.tlu.ee/dt">Tallinna Ülikooli Digitehnoloogiate instituudis</a>.</p>

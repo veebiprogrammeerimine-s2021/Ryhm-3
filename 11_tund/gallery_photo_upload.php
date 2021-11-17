@@ -30,7 +30,7 @@
     $privacy = 1;
     $photo_filename_prefix = "vp_";
     $photo_upload_size_limit = 1024 * 1024;
-    $allowed_photo_types = ["image/jpeg", "image/png", "image/gif"];
+    $allowed_photo_types = ["image/jpeg", "image/png"];
     $photo_size_ratio = 1;
     
     if(isset($_POST["photo_submit"])){
@@ -48,7 +48,7 @@
 		}
 				
         if(isset($_FILES["photo_input"]["tmp_name"]) and !empty($_FILES["photo_input"]["tmp_name"])){
-						//fail on, klass kontrollib kohe, kas on foto
+			//fail on, klass kontrollib kohe, kas on foto
 			$photo_upload = new Photoupload($_FILES["photo_input"]);
 			if(empty($photo_upload->error)){
 				//kas on lubatud tüüpi
@@ -90,6 +90,8 @@
 		}
     }
     
+    $to_head = '<script src="javascript/fileSizeCheck.js" defer></script>' ."\n";
+    
     require("page_header.php");
 ?>
 
@@ -119,7 +121,8 @@
         <input type="radio" name="privacy_input" id="privacy_input_3" value="3" <?php if($privacy == 3){echo " checked";} ?>>
         <label for="privacy_input_3">Avalik (kõik näevad)</label>
         <br>
-        <input type="submit" name="photo_submit" value="Lae pilt üles">
+        <input type="submit" name="photo_submit" id="photo_submit" value="Lae pilt üles">
+        <span id="notice">Vali pilt!</span>
     </form>
     <span><?php echo $photo_upload_notice; ?></span>
 </body>
