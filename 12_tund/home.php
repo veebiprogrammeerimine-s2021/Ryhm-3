@@ -37,6 +37,7 @@
         <li><a href="gallery_photo_upload.php">Galeriipiltide üleslaadimine</a></li>
         <li><a href="gallery_public.php">Sisseloginud kasutajatele nähtavate fotode galerii</a></li>
         <li><a href="gallery_own.php">Minu fotode galerii</a></li>
+        <li><a href="add_news.php">Uudiste lisamine</a></li>
     </ul>
 </body>
 </html>
