@@ -39,7 +39,7 @@ function storeRating(){
             rating = i;
         }
     }
-    if(rating > 0){
+    
         //AJAX
         let webRequest = new XMLHttpRequest();
         //kui asjad tööle hakkavad, siis jälgi
@@ -47,14 +47,18 @@ function storeRating(){
             //kas õnnestus
             if(this.readyState == 4 && this.status == 200){
                 //mida teha, kui vastus tuli
-                document.querySelector("#avgRating").innerHTML = "Keskmine hinne: " + this.responseText;
+                document.querySelector("#avgRating").innerHTML = this.responseText;
 				document.querySelector("#rating" + photoId).innerHTML = this.responseText;
                 document.querySelector("#storeRating").removeEventListener("click", storeRating);
             }
         };
         //panemegi tööle
-        webRequest.open("GET", "store_photorating.php?photo=" + photoId + "&rating=" + rating, true);
+        if(rating > 0){
+            webRequest.open("GET", "store_photorating.php?photo=" + photoId + "&rating=" + rating, true);
+        }  else {
+            webRequest.open("GET", "store_photorating.php?photo=" + photoId, true);
+        }            
         webRequest.send();
         //AJAX lõppes
-    }
+    
 }
