@@ -1,6 +1,8 @@
 <?php
+
+	//var_dump($_SERVER);
     //alustame sessiooni
-    session_start();
+    //session_start();
     //kas on sisselogitud
     if(!isset($_SESSION["user_id"])){
         header("Location: page.php");
